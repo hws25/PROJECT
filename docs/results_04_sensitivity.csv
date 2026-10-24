@@ -1,0 +1,7 @@
+inputs,MAE,RMSE,R2
+distance only,0.855,1.272,0.822
+"+ duration, average speed",0.88,1.297,0.815
+"+ hour of day, weekday",0.829,1.209,0.839
++ battery temperature (= all trip features),0.784,1.166,0.85
++ current,0.745,1.116,0.863
++ voltage (= all features),0.74,1.105,0.866
