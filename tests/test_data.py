@@ -1,19 +1,23 @@
+"""Tests for loading, quality-checking and cleaning the trip data."""
 from ev_energy import load_data, quality_report
 
 PATH = "data/raw/ev_trip_energy.csv"
 
 
 def test_load_shape_and_columns():
+    """Loading gives all 10,151 raw trips plus the derived speed column."""
     df = load_data(PATH)
     assert df.shape[0] == 10151
     assert {"energy_kwh", "vehicle_id", "avg_speed_kmh"} <= set(df.columns)
 
 
 def test_quality_report_runs():
+    """The quality report includes the out-of-range counts."""
     assert "outside_range" in quality_report(load_data(PATH)).columns
 
 
 def test_clean_data_removes_bad_rows_and_columns():
+    """Cleaning removes only the 435 V row and drops the unreliable columns."""
     from ev_energy import clean_data
     df = load_data(PATH)
     out = clean_data(df)
@@ -23,6 +27,7 @@ def test_clean_data_removes_bad_rows_and_columns():
 
 
 def test_split_has_no_shared_vehicles():
+    """No vehicle appears in both the training and test sets."""
     from ev_energy import clean_data, split_by_vehicle
     train, test = split_by_vehicle(clean_data(load_data(PATH)))
     assert set(train.vehicle_id).isdisjoint(set(test.vehicle_id))

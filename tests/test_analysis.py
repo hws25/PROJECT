@@ -1,3 +1,4 @@
+"""Tests for permutation importance and grouped residual summaries."""
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
@@ -6,6 +7,7 @@ from ev_energy import error_by_group, grouped_permutation_importance
 
 
 def test_permutation_importance_ranks_the_useful_feature_first():
+    """A feature the target depends on outranks pure noise."""
     rng = np.random.default_rng(0)
     X = pd.DataFrame({"useful": rng.normal(size=300), "noise": rng.normal(size=300)})
     y = 3 * X["useful"]
@@ -16,6 +18,7 @@ def test_permutation_importance_ranks_the_useful_feature_first():
 
 
 def test_error_by_group_sign_and_counts():
+    """Residual sign (actual - predicted) and trip counts are correct per group."""
     groups = pd.Series(["low", "low", "high", "high"])
     out = error_by_group([1, 1, 5, 5], [1, 1, 4, 4], groups)
     assert out.loc["high", "mean_residual"] == 1      # actual > predicted -> positive
